@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.comp.css" type="text/css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    
+    <title>Online Chess</title>
+</head>
+<body>
+
+    <div class="navigation">
+        <input type="checkbox" class="navigation__checkbox" id="navi-toggle">
+
+        <label for="navi-toggle" class="navigation__button">
+            <span class="navigation__icon">&nbsp;</span>
+        </label>
+
+        <div class="navigation__background">&nbsp;</div>
+
+        <nav class="navigation__nav">
+            <ul class="navigation__list">
+                <li class="navigation__item"><a href="/games/new-game" class="navigation__link"><span>01</span>New Game</a></li>
+                <li class="navigation__item"><a href="/games/join-game" class="navigation__link"><span>02</span>Join Game</a></li>
+                <li class="navigation__item"><a href="/games/continue-game" class="navigation__link"><span>03</span>Continue Game</a></li>
+                <li class="navigation__item"><a href="/games/watch-game" class="navigation__link"><span>04</span>Watch Game</a></li>
+                <li class="navigation__item"><a href="/games/review-game" class="navigation__link"><span>05</span>Review Game</a></li>
+                <li class="navigation__item"><a href="/auth/signout" class="navigation__link"><span>06</span>LogOut</a></li>
+                </ul>
+        </nav>
+    </div>
+
+    <header class="header">
+        <div class="header__logo-box">
+            <img src="/images/logo-white.png" alt="Logo" class="header__logo">
+        </div>
+
+        <div class="header__text-box">
+            <h1 class="heading-primary">
+                <span class="heading-primary--main">Chess</span>
+                <span class="heading-primary--sub">can last for hours</span>
+            </h1>
+
+            <a href="/pages/leaderboard" class="btn btn--white btn--animated">Leaderboard</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="section-about">
+            <div class="u-center-text u-margin-bottom-big">
+                <h2 class="heading-secondary">
+                    Exciting tournaments for skilled players
+                </h2>
+            </div>
+
+            <div class="row">
+                <div class="col-1-of-2">
+                    <h3 class="heading-tertiary u-margin-bottom-small">Create, Join and View</h3>
+                    <p class="paragraph">
+                        Create new tournaments, join tournaments to participate in the action, view on going tournaments and view archive for completed tournaments.
+                        Tournament matches are randomly created and can be accessed from continue game.
+                    </p>
+                    <h3 class="heading-tertiary u-margin-bottom-small">Metamask and Goerli</h3>
+                    <p class="paragraph">
+                        Connect to metamask account before moving ahead to the tournaments' page. Tournaments use ETH in the Goerli network
+                    </p>
+                    <a href="/tournaments" class="btn-text float-right">Tournaments &rarr;</a>
+                </div>
+                <div class="col-1-of-2">
+                    <div class="composition">
+
+                        <img srcset="/images/chess15.jpg 300w, /images/chess15.jpg 1000w"
+                             sizes="(max-width: 56.25em) 20vw, (max-width: 37.5em) 30vw, 300px"
+                             alt="Photo 1"
+                             class="composition__photo composition__photo--p1"
+                             src="/images/chess15.jpg">
+
+                        <img srcset="/images/chess8.jpg 300w, /images/chess8.jpg 1000w"
+                             sizes="(max-width: 56.25em) 20vw, (max-width: 37.5em) 30vw, 300px"
+                             alt="Photo 2"
+                             class="composition__photo composition__photo--p2"
+                             src="/images/chess8.jpg">
+
+                        <img srcset="/images/chess12.jpg 300w, /images/chess12.jpg 1000w"
+                             sizes="(max-width: 56.25em) 20vw, (max-width: 37.5em) 30vw, 300px"
+                             alt="Photo 3"
+                             class="composition__photo composition__photo--p3"
+                             src="/images/chess12.jpg">
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-features">
+            
+            <div class="row">
+                <div class="col-1-of-4">
+                    <div class="feature-box">
+                        <i class="feature-box__icon icon-basic-cup"></i>
+                        <h3 class="heading-tertiary u-margin-bottom-small">Wins</h3>
+                        <p class="feature-box__digit" id="wins"></p>
+                    </div>
+                </div>
+
+                <div class="col-1-of-4">
+                    <div class="feature-box">
+                        <i class="feature-box__icon icon-basic-flag1"></i>
+                        <h3 class="heading-tertiary u-margin-bottom-small">Draws</h3>
+                        <p class="feature-box__digit" id="draws"></p>
+                    </div>
+                </div>
+
+                <div class="col-1-of-4">
+                    <div class="feature-box">
+                        <i class="feature-box__icon icon-basic-trashcan-remove"></i>
+                        <h3 class="heading-tertiary u-margin-bottom-small">Loses</h3>
+                         <p class="feature-box__digit" id="loses"></p>
+                    </div>
+                </div>
+
+                <div class="col-1-of-4">
+                    <div class="feature-box">
+                        <i class="feature-box__icon icon-basic-calculator"></i>
+                        <h3 class="heading-tertiary u-margin-bottom-small">Points</h3>
+                        <p class="feature-box__digit" id="points"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type='module' src="../js/dashboard.js"></script>
+</body>
+</html>
