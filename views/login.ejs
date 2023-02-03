@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.comp.css" type="text/css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    
+    <title>Online Chess</title>
+</head>
+<body>
+    <main>
+
+        <section class="section-book">
+            <div class="row">
+                <div class="book">
+                    <div class="book__form">
+                        <form name="signInForm" action="/auth/signin" method="post" class="form">
+                            <div class="u-margin-bottom-medium">
+                                <h2 class="heading-secondary">
+                                    Login
+                                </h2>
+                                <p>Don't have an account? <a href="/auth/signup">Sign Up</a></p>
+                            </div>
+
+                            <div class="form__group">
+                                <input name="username" type="text" class="form__input" placeholder="Username" id="username" autocomplete="username" required>
+                                <label for="username" class="form__label">Username</label>
+                            </div>
+
+                            <div class="form__group">
+                                <input name="password" type="password" class="form__input" placeholder="Password" id="password" autocomplete="password" required>
+                                <label for="password" class="form__label">Password</label>
+                            </div>
+
+                            <div class="form__group">
+                                <input type='submit' value='Submit' class='btn btn--green'/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+</body>
+</html>

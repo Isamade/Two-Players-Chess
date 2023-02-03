@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+
+        <link rel="stylesheet" href="/css/style.comp.css" type="text/css">
+        <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+        
+        <title>Online Chess</title>
+    </head>
+
+    <body>
+        <div class="navigation">
+            <input type="checkbox" class="navigation__checkbox" id="navi-toggle">
+
+            <label for="navi-toggle" class="navigation__button">
+                <span class="navigation__icon">&nbsp;</span>
+            </label>
+
+            <div class="navigation__background">&nbsp;</div>
+
+            <nav class="navigation__nav">
+                <ul class="navigation__list">
+                    <li class="navigation__item"><a href="/tournaments/new-tournament" class="navigation__link"><span>01</span>New Tournament</a></li>
+                    <li class="navigation__item"><a href="/tournaments/join-tournament" class="navigation__link"><span>02</span>Join Tournament</a></li>
+                    <li class="navigation__item"><a href="/tournaments" class="navigation__link"><span>03</span>Tournaments</a></li>
+                    <li class="navigation__item"><a href="/tournaments/my-tournaments" class="navigation__link"><span>04</span>My Tournaments</a></li>
+                    <li class="navigation__item"><a href="/tournaments/archive" class="navigation__link"><span>05</span>Archive</a></li>
+                    <li class="navigation__item"><a href="/pages/dashboard" class="navigation__link"><span>06</span>Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <main>
+
+            <section class="section-tours" id="section-tours">
+                <div class="u-center-text u-margin-bottom-big">
+                    <button class="tour-btn" id="left">&lAarr;</button>
+                    <h2 class="heading-secondary">
+                        Tournaments
+                    </h2>
+                    <button class="tour-btn" id="right">&rAarr;</button>
+                </div>
+
+                <div class="row">
+                </div>
+
+            </section>
+        </main>
+
+        <div class="popup" id="popup">
+            <div class="popup__content">
+                <div class="popup__left">
+                    <img src="/images/chess11.jpg" alt="Tour photo" class="popup__img">
+                    <img src="/images/chess10.jpeg" alt="Tour photo" class="popup__img">
+                </div>
+                <div class="popup__right">
+                    <a href="#section-tours" class="popup__close">&times;</a>
+                    <h2 class="heading-secondary u-margin-bottom-small">Make or verify payment</h2>
+                    <h3 class="heading-tertiary u-margin-bottom-small">Important &ndash; Read the following before making payment</h3>
+                    <p class="popup__text">
+                        A request to join the tournament has been sent and the next step is to make payment; payment has to be made with the
+                        same account that was active when you clicked the join button. If you do not want to make payment with this account,
+                        please close this dialog box and click the join button again with the right account active. Once you have carried out
+                        payment by clicking the pay button, you will automatically be verified. If verification wasn't successful but payment
+                        was made, you can use the verify button to verify payment was made; ensure the same account used to make payment is
+                        active before attempting to verify. A ten percent fee will be billed from your stake for facilitating the tournament. 
+                        If the tournament is not completed before its duration is exhausted, you can withdraw your billed stake. The winner 
+                        of the tournament can collect the entire prize staked by all the participants. 
+                    </p>
+                    <a class="btn btn--green hidden" id="join">Pay</a>
+                    <a class="btn btn--green hidden" id="confirm">Verify</a>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.5/web3.min.js"></script>
+        <script type="module">
+            import { loadJoinTournament } from '../js/tournamentPage.js';
+            loadJoinTournament();
+        </script>
+    </body>
+</html>

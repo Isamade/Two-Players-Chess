@@ -1,0 +1,8 @@
+{
+    "MONGODB_URI": "mongodb://localhost:27017/chessdbb",
+    "SQL_HOST": "localhost",
+    "SQL_USER": "root",
+    "SQL_PASSWORD": "password",
+    "SQL_DATABASE": "highscores",
+    "SQL_PORT": "5432"
+}
