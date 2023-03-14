@@ -82,7 +82,7 @@ export class Checker {
         return kingChecked;
     }
 
-    checkmate() {
+    cantMove() {
         let selectedPiece, targetSquare, moved;
 
         for (let idx = 0; idx < 64; idx++) {
@@ -109,32 +109,32 @@ export class Checker {
                         case 'PW':
                         case 'PB':
                             moved = Pawn.move(selectedPiece, targetSquare, this.probe, null);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         case 'RW':
                         case 'RB':
                             moved = Rook.move(selectedPiece, targetSquare, this.probe);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         case 'NW':
                         case 'NB':
                             moved = Knight.move(selectedPiece, targetSquare, this.probe);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         case 'BW':
                         case 'BB':
                             moved = Bishop.move(selectedPiece, targetSquare, this.probe);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         case 'QW':
                         case 'QB':
                             moved = Queen.move(selectedPiece, targetSquare, this.probe);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         case 'KW':
                         case 'KB':
                             moved = King.move(selectedPiece, targetSquare, this.probe);
-                            if (moved && !this.wasKingChecked()) { return '' };
+                            if (moved && !this.wasKingChecked()) { return false };
                             break;
                         default:
                             break;
@@ -146,15 +146,15 @@ export class Checker {
             }
         }
 
-        return 'Checkmate'
+        return true;
     }
 
     findCheckType() {
         switch (this.wasKingChecked()) {
             case false:
-                return '';
+                return ((this.cantMove() && 'Stalemate') || '');
             case true:
-                return (this.checkmate() || 'Check')
+                return ((this.cantMove() && 'Checkmate') || 'Check');
         }
     }
 }

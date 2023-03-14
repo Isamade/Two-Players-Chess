@@ -23,7 +23,8 @@ export class Helper {
                     cellContent.classList.add(pieceColor);
                     cellContent.classList.add('cell-size');
                     cell.appendChild(cellContent);
-                } else {
+                } 
+                else {
                     cellContent = document.createElement('div');
                     cellContent.classList.add('cell-size');
                     cell.appendChild(cellContent);

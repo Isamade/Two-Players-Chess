@@ -45,7 +45,8 @@ export class Messenger {
                 localStorage.removeItem('currentGame');
                 alert('Game has ended in a draw');
             })
-        } else if (!answer) {
+        } 
+        else if (!answer) {
             this.socket.emit('refuseDraw', {name: this.game.name, username: this.game.username}, (error, layout, playersTurn) => {
                 this.board.updateBoard(error, layout, playersTurn)
             });

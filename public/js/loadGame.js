@@ -34,7 +34,8 @@ class ContinueGame extends PlayersGame {
 
 if (!currentGame) {
     window.location.href = '/pages/dashboard';
-} else {
+} 
+else {
     new ContinueGame(currentGame.name, currentGame.clientId);
 }
 document.querySelector('.exit-game').addEventListener('click', ContinueGame.exitGame);

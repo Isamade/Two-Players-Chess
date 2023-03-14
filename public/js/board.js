@@ -164,6 +164,7 @@ export default class Board {
             this.updateBoard(null, layout, playersTurn);
             this.unselectPiece();
             (checkType === "Checkmate") && alert('Game Over, you win!');
+            (checkType === "Stalemate") && alert('Game Over, Stalemate');
         });
     }
 

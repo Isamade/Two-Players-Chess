@@ -400,6 +400,16 @@ const movePiece = async({clientId, name, username, layout, playersTurn, canKingC
         Redis.setGame(name, '');
         game.tournament && TournamentController.updateTournament(game.tournament, username);
     }
+    else if (checkType === 'Stalemate') {
+        GameController.updateGame(name, {...game, hasGameEnded: true, winner: ''});
+        UserController.userDrew(name, game.playerOne.username);
+        UserController.userDrew(name, game.playerTwo.username);
+        eventEmitter.emit('userDrew', game.playerOne.username);
+        eventEmitter.emit('userDrew', game.playerTwo.username);
+        Redis.setGame(name, '');
+        const roundWinner = (Math.floor(Math.random() * 2) === 0) ? game.playerOne.username : game.playerTwo.username;
+        game.tournament && TournamentController.updateTournament(game.tournament, roundWinner);
+    }
 
     return { game, checkType }
 }
