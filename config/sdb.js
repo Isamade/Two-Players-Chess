@@ -1,6 +1,7 @@
-const EventEmitter = require('events').EventEmitter;
-const mysql = require('mysql2');
-const config = require('config');
+import { EventEmitter } from 'events';
+//const mysql = require('mysql2');
+//import { get } from 'config';
+import config from 'config';
 
 const eventEmitter = new EventEmitter();
 const host = config.get('SQL_HOST');
@@ -9,7 +10,7 @@ const password = config.get('SQL_PASSWORD');
 const database = config.get('SQL_DATABASE');
 const port = config.get('SQL_PORT');
 
-let connectSql = mysql.createConnection({
+/*let connectSql = mysql.createConnection({
     host,
     user,
     password,
@@ -21,9 +22,11 @@ connectSql.connect((err) => {
         throw err;
     }
     console.log('sql connected!')
-});
+});*/
 
-/*const { Client } = require("pg");
+//import { Client } from "pg";
+import pg from 'pg';
+const { Client } = pg;
 const connectSql = new Client({
   user,
   host,
@@ -31,7 +34,7 @@ const connectSql = new Client({
   password,
   port,
 });
-const connectSql = new Client({
+/*const connectSql = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
@@ -70,7 +73,7 @@ eventEmitter.on('userDrew', (username)=>{
     })
 });
 
-module.exports = {
+export {
     connectSql,
     eventEmitter
 };

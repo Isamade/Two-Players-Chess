@@ -1,7 +1,3 @@
-if (localStorage.getItem('previousGame')) {
-    window.location.href = '/games/load-game';
-}
-
 let response;
 let apiRequest = new XMLHttpRequest();
 apiRequest.open('GET', '/auth');

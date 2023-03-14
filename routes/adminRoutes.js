@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const { connectSql } = require('../config/sdb');
-const { ensureAuthenticated, authorizeAdmin } = require('../middlewares');
+import { connectSql } from '../config/sdb.js';
+import { ensureAuthenticated, authorizeAdmin } from '../middlewares/index.js';
 
 /*router.get('/createDB', ensureAuthenticated, authorizeAdmin, (req, res) => {
     let sql = 'CREATE DATABASE highscores';
@@ -20,4 +20,4 @@ router.get('/createTable', ensureAuthenticated, authorizeAdmin, (req, res) => {
     })
 });
 
-module.exports = router;
+export default router;

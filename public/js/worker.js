@@ -1,7 +1,260 @@
-import {Checker} from "./checker.js";
-import {Helper} from "./helper.js";
+let possibleMoves;
 
-export class Pawn {
+function returnPossibleMoves() {
+    this.postMessage(JSON.stringify(possibleMoves));
+}
+
+this.addEventListener('message', function (message) {
+    possibleMoves = [];
+    message = JSON.parse(message.data);
+    const selectedPiece = message.selectedPiece;
+    for (let idx = 0; idx < 64; idx++) {
+        if (idx === selectedPiece.position) continue;
+        const targetSquare = {
+            name: message.layout[idx],
+            color: Helper.findColor(message.layout[idx]),
+            xValue: (idx % 8) + 1,
+            yValue: Math.floor(idx/8) + 1,
+            position: idx
+        }
+        const probe = {
+            layout: message.layout.slice(),
+            canKingCastleLeft: message.canKingCastleLeft,
+            canKingCastleRight: message.canKingCastleRight,
+            swap: false
+        }
+
+        switch (selectedPiece.name) {
+            case 'PW':
+            case 'PB':
+                if (Pawn.move(selectedPiece, targetSquare, probe, null) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            case 'RW':
+            case 'RB':
+                if (Rook.move(selectedPiece, targetSquare, probe) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            case 'NW':
+            case 'NB':
+                if (Knight.move(selectedPiece, targetSquare, probe) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            case 'BW':
+            case 'BB':
+                if (Bishop.move(selectedPiece, targetSquare, probe) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            case 'QW':
+            case 'QB':
+                if (Queen.move(selectedPiece, targetSquare, probe) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            case 'KW':
+            case 'KB':
+                if (King.move(selectedPiece, targetSquare, probe) 
+                && !(new Checker(selectedPiece.color, probe.layout).wasKingChecked())) {
+                    possibleMoves.push(idx);
+                };
+                break;
+            default:
+                break;
+        }
+    }
+    returnPossibleMoves.apply(this);
+});
+
+
+class Helper {    
+    static findKings (layout) {
+        const kingsPositions = {
+            white: null,
+            black: null
+        }
+        layout.forEach((value, index) => {
+            if (value === 'KW') {
+                kingsPositions.white = index;
+            }
+            if (value === 'KB') {
+                kingsPositions.black = index;
+            }
+        });
+        return kingsPositions;
+    }
+    
+    static changeColor(color) {
+        return (color === 'white') ? 'black' : 'white';
+    }
+    
+    static findColor(chessPiece) {
+        return chessPiece.charAt(1) === 'W' ? 'white' : chessPiece.charAt(1) === 'B' ? 'black' : '';
+    }
+    
+    static updatePosition(probeLayout, currentPosition, targetPosition) {
+        const newLayout = probeLayout.slice();
+        newLayout[targetPosition] = newLayout[currentPosition];
+        newLayout[currentPosition] = '';
+        return newLayout;
+    }
+    
+    static diagonalMove(probeLayout, currentSquare, targetSquare) {
+        let movePossible = false;
+        if (Math.abs(currentSquare.xValue - targetSquare.xValue) === Math.abs(currentSquare.yValue - targetSquare.yValue)) {
+            movePossible = true;
+            if ((targetSquare.xValue < currentSquare.xValue) && (targetSquare.yValue < currentSquare.yValue)) {
+                for (let pos = currentSquare.position - 9; pos > targetSquare.position; pos = pos - 9) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false };
+                }
+            }
+            else if ((targetSquare.xValue > currentSquare.xValue) && (targetSquare.yValue < currentSquare.yValue)) {
+                for (let pos = currentSquare.position - 7; pos > targetSquare.position; pos = pos - 7) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+            else if ((targetSquare.xValue < currentSquare.xValue) && (targetSquare.yValue > currentSquare.yValue)) {
+                for (let pos = currentSquare.position + 7; pos < targetSquare.position; pos = pos + 7) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+            else if ((targetSquare.xValue > currentSquare.xValue) && (targetSquare.yValue > currentSquare.yValue)) {
+                for (let pos = currentSquare.position + 9; pos < targetSquare.position; pos = pos + 9) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+        }
+        return movePossible;
+    }
+    
+    static linearMove(probeLayout, currentSquare, targetSquare) {
+        let movePossible = false;
+        if (currentSquare.xValue === targetSquare.xValue || currentSquare.yValue === targetSquare.yValue) {
+            movePossible = true;
+            if ((targetSquare.xValue === currentSquare.xValue) && (targetSquare.yValue < currentSquare.yValue)) {
+                for (let pos = currentSquare.position - 8; pos > targetSquare.position; pos = pos - 8) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+            else if ((targetSquare.xValue < currentSquare.xValue) && (targetSquare.yValue === currentSquare.yValue)) {
+                for (let pos = currentSquare.position - 1; pos > targetSquare.position; pos = pos - 1) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+            else if ((targetSquare.xValue > currentSquare.xValue) && (targetSquare.yValue === currentSquare.yValue)) {
+                for (let pos = currentSquare.position + 1; pos < targetSquare.position; pos = pos + 1) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+            else if ((targetSquare.xValue === currentSquare.xValue) && (targetSquare.yValue > currentSquare.yValue)) {
+                for (let pos = currentSquare.position + 8; pos < targetSquare.position; pos = pos + 8) {
+                    movePossible = (probeLayout[pos] !== '') ? false : true;
+                    if (!movePossible) { return false }
+                }
+            }
+        }
+        return movePossible;
+    }
+}
+
+class Checker {
+
+    constructor(kingColor, layout) {
+        this.kingColor = kingColor;
+        this.layout = layout;
+        this.probe = {
+            layout: layout.slice(),
+            swap: false,
+            canKingCastleLeft: false,
+            canKingCastleRight: false
+        }
+    }
+
+    wasKingChecked() {
+        let kingChecked = false;
+        let selectedPiece;
+        const pos = Helper.findKings(this.probe.layout)[this.kingColor];
+        const targetSquare = {
+            name: this.probe.layout[pos],
+            color: this.kingColor,
+            xValue: (pos % 8) + 1,
+            yValue: Math.floor(pos/8) + 1,
+            position: pos
+        };
+        const checkProbe = {
+            layout: [],
+            swap: false,
+            canKingCastleLeft: false,
+            canKingCastleRight: false
+        };
+        for (let idx = 0; idx < 64; idx++) {
+
+            if (this.probe.layout[idx] !== '' && this.kingColor !== Helper.findColor(this.probe.layout[idx])) {
+                checkProbe.layout = this.probe.layout.slice();
+                selectedPiece = {
+                    name: this.probe.layout[idx],
+                    color: Helper.findColor(this.probe.layout[idx]),
+                    xValue: (idx % 8) + 1,
+                    yValue: Math.floor(idx/8) + 1,
+                    position: idx
+                };
+
+                switch (this.probe.layout[idx]) {
+                    case 'PW':
+                    case 'PB':
+                        kingChecked = Pawn.move(selectedPiece, targetSquare, checkProbe, null);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    case 'RW':
+                    case 'RB':
+                        kingChecked = Rook.move(selectedPiece, targetSquare, checkProbe);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    case 'NW':
+                    case 'NB':
+                        kingChecked = Knight.move(selectedPiece, targetSquare, checkProbe);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    case 'BW':
+                    case 'BB':
+                        kingChecked = Bishop.move(selectedPiece, targetSquare, checkProbe);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    case 'QW':
+                    case 'QB':
+                        kingChecked = Queen.move(selectedPiece, targetSquare, checkProbe);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    case 'KW':
+                    case 'KB':
+                        kingChecked = King.move(selectedPiece, targetSquare, checkProbe);
+                        if (kingChecked) { return kingChecked };
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return kingChecked;
+    }
+}
+
+class Pawn {
     static move(selectedPiece, targetSquare, probe, button) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color) {
@@ -124,7 +377,7 @@ export class Pawn {
     }
 }
 
-export class Rook {
+class Rook {
     static move(selectedPiece, targetSquare, probe){
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && Helper.linearMove(probe.layout, selectedPiece, targetSquare)) {
@@ -139,7 +392,7 @@ export class Rook {
     }
 }
 
-export class Knight {
+class Knight {
     static move(selectedPiece, targetSquare, probe) {
         let moved = false;
         if (Math.abs(selectedPiece.xValue - targetSquare.xValue) === 2 && Math.abs(selectedPiece.yValue - targetSquare.yValue) === 1 && selectedPiece.color !== targetSquare.color) {
@@ -159,7 +412,7 @@ export class Knight {
     }
 }
 
-export class Bishop {
+class Bishop {
     static move(selectedPiece, targetSquare, probe) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && Helper.diagonalMove(probe.layout, selectedPiece, targetSquare)) {
@@ -172,7 +425,7 @@ export class Bishop {
     }
 }
 
-export class Queen {
+class Queen {
     static move(selectedPiece, targetSquare, probe) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && (Helper.diagonalMove(probe.layout, selectedPiece, targetSquare) || Helper.linearMove(probe.layout, selectedPiece, targetSquare))) {
@@ -185,7 +438,7 @@ export class Queen {
     }
 }
 
-export class King {
+class King {
     static move(selectedPiece, targetSquare, probe) {
         let moved = false;
         if (Math.abs(selectedPiece.xValue - targetSquare.xValue) <= 1

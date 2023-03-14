@@ -1,101 +1,52 @@
-import { changeColor, updateBoard } from "./utility.js";
+import {Game} from "./game.js";
 
-const socket = io();
-let game, squares;
-
-if (localStorage.getItem('previousGame')) {
+if (localStorage.getItem('currentGame')) {
     window.location.href = '/games/load-game';
 }
 
-document.querySelector('.footer').classList.add('hidden');
-document.querySelector('.section-board').classList.add('hidden');
-
-class watchGame {
+class WatchGame extends Game {
     constructor(name) {
-        this.name = name;
-        this.username = '';
-        this.opponent = '';
-        this.playersTurn = '';
-        this.board = [];
-        this.hasKingCastled = false;
+        super(name);
         this.playerOneColor = '';
         this.playerTwoColor = '';
         this.page = 'watchGame';
-    }
 
-    viewGame(socket, squares){
+        this.viewGame();
 
-        socket.emit('watchGame', {name: this.name}, (error, playerOne, playerTwo, board, playersTurn) => {  
-            if (error) {
-                alert(error);
-                location.reload();
-            };
-
-            this.username = playerOne.username;
-            this.opponent = playerTwo.username;
-            this.playerOneColor = playerOne.playersColor;
-            this.playerTwoColor = playerTwo.playersColor;
-            this.board = board;
-            this.playersTurn = playersTurn;
-
-            updateBoard(board, squares, this, socket);
+        document.querySelector('.exit-game').addEventListener('click', () => {
+            window.location.href = '/pages/dashboard';
         });
     }
-}
 
+    viewGame() {
+        this.connectTools();
+        this.messenger.socket.emit('watchGame', {name: this.name}, this.cb.bind(this));
+    }
+
+    cb (error, playerOne, playerTwo, layout, playersTurn) {
+        if (error) {
+            alert(error);
+            location.reload();
+            return;
+        };
+
+        this.username = playerOne.username;
+        this.opponent = playerTwo.username;
+        this.playerOneColor = playerOne.playersColor;
+        this.playerTwoColor = playerTwo.playersColor;
+        this.board.updateBoard(null, layout, playersTurn);
+        this.messenger.socket.on('connect', this.messenger.setBoard);
+    }
+
+}
 
 document.querySelector('.watch-game').addEventListener('click', (event) => {
     event.preventDefault();
+    const name = document.querySelector('#title').value;
+    new WatchGame(name);
+    document.querySelector('.game-form').classList.add('hidden');
     document.querySelector('.footer').classList.remove('hidden');
     document.querySelector('.section-board').classList.remove('hidden');
-    const name = document.querySelector('#title').value;
-    game = new watchGame(name);
-    game.viewGame(socket, squares);
-    document.querySelector('.game-form').classList.add('hidden');
 });
+document.querySelector('.exit-game').addEventListener('click', WatchGame.exitGame);
 
-document.querySelector('.exit-game').addEventListener('click', () => {
-    window.location.href = '/pages/dashboard';
-});
-
-socket.on('joinedGame', (username) => {
-    game.opponent = username;
-    alert(`${username} has joined game`);
-});
-
-socket.on('exitedGame', (username) => {
-    alert(`${username} has exited the game`);
-    setTimeout(()=>{
-        document.location.href = '/pages/dashboard';
-    }, 5000);
-});
-
-socket.on('endedGame', (username) => {
-    alert(`Game has ended! ${username} lost`);
-});
-
-socket.on('acceptedDraw', () => {
-    alert('Game has ended in a draw');
-});
-
-socket.on('movedPiece', ({board, checkType}) => {
-    game.board = board;
-    game.playersTurn = changeColor(game.playersTurn);
-    updateBoard(board, squares, game, socket);
-    if (checkType === 'Checkmate') {
-        alert(checkType);
-    }
-});
-
-socket.on('connect', () => {
-    if (game && game.playerOneColor) {
-        socket.emit('updateMyBoard', { name: game.name }, (error, board, playersTurn) => {
-            if (error) {
-                return alert(error);
-            }
-            game.board = board;
-            game.playersTurn = playersTurn;
-            updateBoard(board, squares, game, socket);
-        });
-    };
-});

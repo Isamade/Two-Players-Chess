@@ -1,9 +1,10 @@
-const bcrypt = require('bcryptjs');
-const passport = require('../config/passport');
-const User = require('../models/User');
-const { eventEmitter } = require('../config/sdb');
+import bcryptjs from 'bcryptjs';
+const { genSalt, hash: _hash} = bcryptjs;
+import passport from '../config/passport.js';
+import User from '../models/User.js';
+import { eventEmitter } from '../config/sdb.js';
 
-exports.authUser = async (req, res) => {
+export async function authUser(req, res) {
   try {
     //console.log("reqUser", req.user);
     const user = req.user;
@@ -14,7 +15,7 @@ exports.authUser = async (req, res) => {
   }
 }
 
-exports.signup = async (req, res) => {
+export async function signup(req, res) {
     const { username, email, password } = req.body;
 
     try {
@@ -27,8 +28,8 @@ exports.signup = async (req, res) => {
         }
 
         user = new User({ username, email, password });
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(user.password, salt, (err, hash) => {
+        genSalt(10, (err, salt) => {
+            _hash(user.password, salt, (err, hash) => {
               if (err) throw err;
               user.password = hash;
               user
@@ -47,17 +48,17 @@ exports.signup = async (req, res) => {
             .status(500)
             .json({message: 'Something went wrong. Try again'});
     }
-};
+}
 
-exports.signin = async (req, res) => {
+export async function signin(req, res) {
     passport.authenticate('local', {
       successRedirect: '/pages/dashboard',
       failureRedirect: '/auth/signin'
     })(req, res);
-};
+}
 
 
-exports.signout = async (req, res) => {
+export async function signout(req, res) {
   try {
     req.logout();
     res.redirect('/auth/signin');

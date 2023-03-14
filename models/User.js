@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const crypto = require('crypto');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
+import crypto from 'crypto';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   username: {
     type: String,
     required: [true, "Please add a name"],
@@ -58,4 +59,4 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.index({ name: 1 });*/
 
-module.exports = User = mongoose.model('user', UserSchema);
+export default model('user', UserSchema);

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha './tests/**/*.spec.js'",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
@@ -32,12 +33,17 @@
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
     "pg": "^8.8.0",
-    "redis": "^3.1.2",
+    "redis": "^4.6.5",
     "socket.io": "^4.5.1",
     "uuid": "^9.0.0",
     "web3": "^1.7.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "jsdom": "^21.1.0",
+    "nodemon": "^2.0.7",
+    "sinon": "^15.0.1",
+    "sinon-chai": "^3.7.0"
   }
 }

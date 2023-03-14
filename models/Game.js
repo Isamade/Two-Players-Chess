@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
-const GameSchema = new mongoose.Schema({
+const GameSchema = new Schema({
   name: {
     type: String,
     required: [true, "Please add a name"],
     unique: [true, "Name already exists"]
   },
-  board: {
+  layout: {
     type: Array,
     default: ["RW","NW","BW","KW","QW","BW","NW","RW","PW","PW","PW","PW","PW","PW","PW","PW","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","PB","PB","PB","PB","PB","PB","PB","PB","RB","NB","BB","KB","QB","BB","NB","RB"]
   },
@@ -23,7 +24,8 @@ const GameSchema = new mongoose.Schema({
         clientId: '',
         username: '',
         playersColor: '',
-        hasKingCastled: false
+        canKingCastleLeft: true,
+        canKingCastleRight: true
     }
   },
   playerTwo: {
@@ -32,7 +34,8 @@ const GameSchema = new mongoose.Schema({
         clientId: '',
         username: '',
         playersColor: '',
-        hasKingCastled: false
+        canKingCastleLeft: true,
+        canKingCastleRight: true
     }
   },
   tournament: String,
@@ -42,4 +45,4 @@ const GameSchema = new mongoose.Schema({
   }
 });
 
-module.exports = Game = mongoose.model('game', GameSchema);
+export default model('game', GameSchema);

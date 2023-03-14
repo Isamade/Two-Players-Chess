@@ -1,13 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const {
-    authUser,
-    signup,
-    signin,
-    signout
-} = require('../controllers/authController');
+import { Router } from 'express';
+const router = Router();
+import { authUser, signup, signin, signout } from '../controllers/authController.js';
 
-const { forwardAuthenticated, ensureAuthenticated } = require('../middlewares');
+import { forwardAuthenticated, ensureAuthenticated } from '../middlewares/index.js';
 
 router.get('/', ensureAuthenticated, authUser);
 router.get('/signin', forwardAuthenticated, (req, res) => res.render('login'));
@@ -16,4 +11,4 @@ router.get('/signout', ensureAuthenticated, signout);
 router.post('/signup', forwardAuthenticated, signup);
 router.post('/signin', forwardAuthenticated, signin);
 
-module.exports = router;
+export default router;

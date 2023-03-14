@@ -1,22 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const { createTournament, joinTournament, getTournament, getTournamentData, getJoinTournamentData, getContract, addPlayer } = require('../controllers/tournamentController');
-const { getUserTournaments } = require('../controllers/userController');
+import { Router } from 'express';
+const router = Router();
+import TournamentController from '../controllers/tournamentController.js';
+import UserController from '../controllers/userController.js';
 
-const { ensureAuthenticated } = require('../middlewares');
+import { ensureAuthenticated } from '../middlewares/index.js';
 
 router.get('/', ensureAuthenticated, (req, res) => res.render('tournaments'));
 router.get('/archive', ensureAuthenticated, (req, res) => res.render('tournamentsArchive'));
-router.get('/data', ensureAuthenticated, getTournamentData);
-router.get('/tournament/:name', ensureAuthenticated, getTournament);
+router.get('/data', ensureAuthenticated, TournamentController.getTournamentData);
+router.get('/tournament/:name', ensureAuthenticated, TournamentController.getTournament);
 router.get('/my-tournaments', ensureAuthenticated, (req, res) => res.render('myTournaments'));
-router.get('/my-tournaments-data', ensureAuthenticated, getUserTournaments);
+router.get('/my-tournaments-data', ensureAuthenticated, UserController.getUserTournaments);
 router.get('/new-tournament', ensureAuthenticated, (req, res) => res.render('newTournament'));
 router.get('/join-tournament', ensureAuthenticated, (req, res) => res.render('joinTournament'));
-router.get('/join-tournament-data', getJoinTournamentData);
-router.get('/contract', ensureAuthenticated, getContract);
-router.get('/addPlayer', ensureAuthenticated, addPlayer);
-router.post('/new-tournament', ensureAuthenticated, createTournament);
-router.post('/join-tournament', ensureAuthenticated, joinTournament);
+router.get('/join-tournament-data', TournamentController.getJoinTournamentData);
+router.get('/contract', ensureAuthenticated, TournamentController.getContract);
+router.get('/addPlayer', ensureAuthenticated, TournamentController.addPlayer);
+router.post('/new-tournament', ensureAuthenticated, TournamentController.createTournament);
+router.post('/join-tournament', ensureAuthenticated, TournamentController.joinTournament);
 
-module.exports = router;
+export default router;

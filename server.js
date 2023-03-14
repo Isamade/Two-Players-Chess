@@ -1,14 +1,16 @@
-const app = require('./app');
-const { newGame, joinGame, watchGame, continueGame, saveGame, exitGame, endGame, drawGame, reviewGame, updateMyBoard, movePiece } = require('./controllers/chessController');
+import * as http from 'http';
+import { Server } from 'socket.io';
+import app from './app.js';
+import { newGame, joinGame, watchGame, continueGame, saveGame, exitGame, endGame, drawGame, reviewGame, updateMyBoard, movePiece } from './controllers/chessController.js';
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const server = http.createServer(app);
+const io = new Server(server);
 const port = process.env.PORT || 3000;
 
 io.sockets.on('connection', (client) => {
 
     client.on('newGame', async(options, callback) => {
-        const { error, name, clientId, board } = await newGame({ clientId: client.id, ...options });
+        const { error, name, clientId, layout } = await newGame({ clientId: client.id, ...options });
 
         if (error) {
             return callback(error)
@@ -16,7 +18,7 @@ io.sockets.on('connection', (client) => {
 
         client.join(name);
 
-        callback(error, clientId, board);
+        callback(error, clientId, layout);
     });
 
     client.on('joinGame', async(options, callback) => {
@@ -27,9 +29,9 @@ io.sockets.on('connection', (client) => {
         }
 
         client.join(game.name);
-        client.broadcast.to(game.name).emit('joinedGame', `${game.playerTwo.username}`);
+        client.broadcast.to(game.name).emit('opponentJoined', `${game.playerTwo.username}`);
 
-        callback(error, game.playerTwo.clientId, game.playerOne.username, game.playerTwo.playersColor, game.board, game.playersTurn);
+        callback(error, game.playerTwo.clientId, game.playerOne.username, game.playerTwo.playersColor, game.layout, game.playersTurn);
     });
 
     client.on('watchGame', async(options, callback) => {
@@ -41,11 +43,11 @@ io.sockets.on('connection', (client) => {
 
         client.join(game.name);
 
-        callback(error, game.playerOne, game.playerTwo, game.board, game.playersTurn);
+        callback(error, game.playerOne, game.playerTwo, game.layout, game.playersTurn);
     });
 
     client.on('continueGame', async(options, callback) => {
-        const { error, name, username, opponent, playersColor, board, playersTurn, castled } = await continueGame(options);
+        const { error, name, opponent, playersColor, layout, playersTurn, canKingCastleLeft, canKingCastleRight } = await continueGame(options);
         
         if (error) {
             return callback(error)
@@ -53,7 +55,7 @@ io.sockets.on('connection', (client) => {
 
         client.join(name);
 
-        callback(error, opponent, playersColor, board, playersTurn, castled);
+        callback(error, opponent, playersColor, layout, playersTurn, canKingCastleLeft, canKingCastleRight);
     });
 
     client.on('saveGame', async(options, callback) => {
@@ -75,7 +77,7 @@ io.sockets.on('connection', (client) => {
             return true;
         }
 
-        client.broadcast.to(name).emit('exitedGame', username);
+        client.broadcast.to(name).emit('opponentExited', username);
     });
 
     client.on('endGame', async(options, callback) => {
@@ -99,9 +101,9 @@ io.sockets.on('connection', (client) => {
             return callback(error)
         }
 
-        client.broadcast.to(name).emit('offeredDraw', username);
+        client.broadcast.to(name).emit('drawOffered', username);
 
-        callback();
+        callback(error);
     });
 
     client.on('acceptDraw', async(options, callback) => {
@@ -111,23 +113,23 @@ io.sockets.on('connection', (client) => {
             return callback(error)
         }
 
-        client.broadcast.to(name).emit('acceptedDraw');
+        client.broadcast.to(name).emit('drawAccepted');
 
         callback();
     });
 
     client.on('refuseDraw', async(options, callback) => {
         const { name, username } = options;
-        let { error, board, playersTurn } = await updateMyBoard(options);
+        let { error, layout, playersTurn } = await updateMyBoard(options);
         
         if (!username || !name) {
             error = 'Please provide username and name';
             return callback(error)
         }
 
-        client.broadcast.to(name).emit('refusedDraw', username);
+        client.broadcast.to(name).emit('drawRefused', username);
 
-        callback(error, board, playersTurn);
+        callback(error, layout, playersTurn);
     });
 
     client.on('reviewGame', async(options, callback) => {
@@ -141,13 +143,13 @@ io.sockets.on('connection', (client) => {
     });
 
     client.on('updateMyBoard', async(options, callback) => {
-        const { error, board, playersTurn } = await updateMyBoard(options);
+        const { error, layout, playersTurn } = await updateMyBoard(options);
 
         if (error) {
             return callback(error)
         }
 
-        callback(error, board, playersTurn);
+        callback(error, layout, playersTurn);
     })
 
     client.on('movePiece', async(options, callback) => {
@@ -157,9 +159,9 @@ io.sockets.on('connection', (client) => {
             return callback(error)
         }
 
-        client.broadcast.to(game.name).emit('movedPiece', { board: game.board, checkType });
+        client.broadcast.to(game.name).emit('movedPiece', { layout: game.layout, checkType });
 
-        callback(error, game.board, options.hasKingCastled, checkType);
+        callback(error, game.layout, options.canKingCastleLeft, options.canKingCastleRight, game.playersTurn, checkType);
     });
 
 });

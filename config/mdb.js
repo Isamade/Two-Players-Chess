@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const { connect } = mongoose;
 
-const config = require('config');
+import config from 'config';
 const db = config.get('MONGODB_URI');
 
 
 const connectMongoDB = () => {
 	try {
-		mongoose.connect(db, {
+		connect(db, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useFindAndModify: false,
@@ -21,4 +22,4 @@ const connectMongoDB = () => {
 	}
 };
 
-module.exports = connectMongoDB;
+export default connectMongoDB;

@@ -128,3 +128,4 @@ dist
 
 # app files
 config/production.json
+config/default.json

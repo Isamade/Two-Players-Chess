@@ -1,24 +1,31 @@
-const path = require('path');
-const express = require('express');
-const session = require('express-session');
+import * as path from 'path'
+import { fileURLToPath } from 'url'
+import express from 'express';
+import session from 'express-session';
 const app = express();
-const bodyParser = require('body-parser');
-const passport = require('passport');
-const { connectSql } = require('./config/sdb');
-const { connectContract } = require('./config/eth');
-const connectDB = require('./config/mdb');
+import bodyParser from 'body-parser';
+const { json, urlencoded } = bodyParser;
+import passport from 'passport';
+import { connectSql } from './config/sdb.js';
+import { connectContract } from './config/eth.js';
+import connectDB from './config/mdb.js';
+import Redis from './config/redis.js';
 connectSql.connect();
 connectContract();
 connectDB();
+Redis.connect();
 
-const authRoutes = require('./routes/authRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const pageRoutes = require('./routes/pageRoutes');
-const gameRoutes = require('./routes/gameRoutes');
-const tournamentRoutes = require('./routes/tournamentRoutes');
+import authRoutes from './routes/authRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import pageRoutes from './routes/pageRoutes.js';
+import gameRoutes from './routes/gameRoutes.js';
+import tournamentRoutes from './routes/tournamentRoutes.js';
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(json());
+app.use(urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname + '/views'));
@@ -48,4 +55,4 @@ app.get('/', (req, res) => {
     res.redirect('/auth/signup');
 });
 
-module.exports = app;
+export default app;
