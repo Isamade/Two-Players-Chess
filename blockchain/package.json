@@ -5,13 +5,19 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "database": "truffle develop",
+    "deploy": "truffle migrate --network develop",
+    "deploy-local": "truffle migrate --network ganache",
+    "deploy-live": "truffle migrate --network goerli_infura",
+    "database-deploy": "npm run database && npm run deploy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@truffle/hdwallet-provider": "^2.1.6",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "truffle": "^5.8.0"
   }
 }

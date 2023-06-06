@@ -3,7 +3,7 @@ import * as path from 'path'
 import { fileURLToPath } from 'url'
 import moment from 'moment';
 import Tournament from '../models/Tournament.js';
-import { addTournament, setWinner, verifyTournamentPlayer } from '../config/eth.js';
+import { addTournament, setWinner, verifyTournamentPlayer } from '../config/ethereum.js';
 import GameController from './gameController.js';
 import UserController from './userController.js';
 

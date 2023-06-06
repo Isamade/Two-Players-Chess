@@ -8,7 +8,7 @@ import GameController from "../../controllers/gameController.js";
 import UserController from "../../controllers/userController.js";
 import TournamentController from "../../controllers/tournamentController.js";
 import Redis from "../../config/redis.js";
-import { eventEmitter } from "../../config/sdb.js";
+import { eventEmitter } from "../../config/postgres.js";
 import Game from '../../models/Game.js';
 
 const expect = chai.expect;

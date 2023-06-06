@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 const { connect } = mongoose;
 
-import config from 'config';
-const db = config.get('MONGODB_URI');
+const db = process.env.MONGO_URI;
 
 
 const connectMongoDB = () => {

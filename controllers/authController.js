@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs';
 const { genSalt, hash: _hash} = bcryptjs;
 import passport from '../config/passport.js';
 import User from '../models/User.js';
-import { eventEmitter } from '../config/sdb.js';
+import { eventEmitter } from '../config/postgres.js';
 
 export async function authUser(req, res) {
   try {

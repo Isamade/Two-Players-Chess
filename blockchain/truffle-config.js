@@ -1,21 +1,29 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const AccountIndex = 0;
+const accountIndex = 0;
 const infura = process.env.INFURA_URI;
 const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   contracts_directory: './contracts/',
-  contracts_build_directory: '../abis',
+  contracts_build_directory: './abis',
 
   networks: {
-    development: {
-      host: "127.0.0.1",
+    develop: {
+      //host: "http://172.17.0.1",
+      //port: 8545,
+      port: 9545,
+      network_id: 20,
+      defaultEtherBalance: 100,
+      blockTime: 3
+    },
+    ganache: {
+      host: "http://172:0.0.1",
       port: 7545,
-      network_id: 5777,
+      network_id: 5777
     },
     goerli_infura: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, infura, AccountIndex)
+        return new HDWalletProvider(mnemonic, infura, accountIndex)
       },
       network_id: 5,
       networkCheckTimeout: 10000,

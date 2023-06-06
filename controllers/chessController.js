@@ -1,6 +1,6 @@
 import moment from 'moment';
 import Redis from '../config/redis.js';
-import { eventEmitter } from '../config/sdb.js';
+import { eventEmitter } from '../config/postgres.js';
 import Game from '../models/Game.js';
 import GameController from './gameController.js';
 import UserController from './userController.js';
