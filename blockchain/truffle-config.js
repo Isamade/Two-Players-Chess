@@ -5,17 +5,9 @@ const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   contracts_directory: './contracts/',
-  contracts_build_directory: './abis',
+  contracts_build_directory: '../abis',
 
   networks: {
-    develop: {
-      //host: "http://172.17.0.1",
-      //port: 8545,
-      port: 9545,
-      network_id: 20,
-      defaultEtherBalance: 100,
-      blockTime: 3
-    },
     ganache: {
       host: "http://172:0.0.1",
       port: 7545,

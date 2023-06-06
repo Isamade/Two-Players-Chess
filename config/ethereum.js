@@ -3,7 +3,7 @@ const require = createRequire(import.meta.url);
 import HDWalletProvider from "@truffle/hdwallet-provider";
 import Web3 from 'web3';
 //import { abi, networks } from '../abis/Tournament.json';
-const { abi, networks } = require('../blockchain/abis/Tournament.json');
+const { abi, networks } = require('../abis/Tournament.json');
 
 
 let provider;
