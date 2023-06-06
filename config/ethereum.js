@@ -2,30 +2,29 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 import HDWalletProvider from "@truffle/hdwallet-provider";
 import Web3 from 'web3';
-import config from 'config';
 //import { abi, networks } from '../abis/Tournament.json';
-const { abi, networks } = require('../abis/Tournament.json');
+const { abi, networks } = require('../blockchain/abis/Tournament.json');
 
-//const mnemonic = config.get("MNEMONIC");
-//const infura = config.get("INFURA_URI");
+
+let provider;
+if (process.env.NODE_ENV === 'production') {
+    provider = new HDWalletProvider({
+        mnemonic: process.env.MNEMONIC,
+        providerOrUrl: process.env.INFURA_URI,
+        addressIndex: 0
+    });
+}
+else if (process.env.NODE_ENV === 'development') {
+    provider = new Web3.providers.HttpProvider(process.env.ETH_URI);
+}
 
 let web3;
 let accounts;
 let networkId;
 let tournamentContract;
 
-const getWeb3 = () => {
-    const provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545");
-    /*const provider = new HDWalletProvider({
-        mnemonic: mnemonic,
-        providerOrUrl: infura,
-        addressIndex: 0
-    });*/
-    web3 = new Web3(provider);
-}
-
 const connectContract = async() => {
-    getWeb3();
+    web3 = new Web3(provider);
     accounts = await web3.eth.getAccounts();
     networkId = await web3.eth.net.getId();
     tournamentContract = new web3.eth.Contract(

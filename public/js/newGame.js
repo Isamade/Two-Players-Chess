@@ -3,8 +3,8 @@ import {PlayersGame} from "./game.js";
 if (window.localStorage.getItem('currentGame')) {
     window.location.href = '/games/load-game';
 }
-console.log('print this', global.fineGirl);
-console.log('print this 2', fineGirl);
+//console.log('print this', global.fineGirl);
+//console.log('print this 2', fineGirl);
 
 export default class NewGame extends PlayersGame {
     constructor(name, color) {

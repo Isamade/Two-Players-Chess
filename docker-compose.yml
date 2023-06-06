@@ -1,0 +1,21 @@
+version: '3'
+services:
+  api:
+    image: chess
+    ports: 
+      - '3000:3000'
+    volumes:
+      - /app/node_modules
+      - /app/blockchain/node_modules
+      - .:/app
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=host.docker.internal
+      - PGDATABASE=highscores
+      - PGPASSWORD=password
+      - PGPORT=5432
+      - MONGO_URI=mongodb://host.docker.internal:27017/chessdb
+      - ETH_URI=http://host.docker.internal:7545
+      - NODE_ENV=development

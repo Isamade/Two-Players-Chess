@@ -1,25 +1,29 @@
-import * as path from 'path'
-import { fileURLToPath } from 'url'
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
 import express from 'express';
 import session from 'express-session';
-const app = express();
 import bodyParser from 'body-parser';
-const { json, urlencoded } = bodyParser;
 import passport from 'passport';
-import { connectSql } from './config/sdb.js';
-import { connectContract } from './config/eth.js';
-import connectDB from './config/mdb.js';
+import { SQL } from './config/postgres.js';
+import { connectContract } from './config/ethereum.js';
+import connectMongoDB from './config/mongoDB.js';
 import Redis from './config/redis.js';
-connectSql.connect();
-connectContract();
-connectDB();
-Redis.connect();
 
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import pageRoutes from './routes/pageRoutes.js';
 import gameRoutes from './routes/gameRoutes.js';
 import tournamentRoutes from './routes/tournamentRoutes.js';
+
+const app = express();
+const { json, urlencoded } = bodyParser;
+
+
+SQL.connect();
+connectContract();
+connectMongoDB();
+Redis.connect();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

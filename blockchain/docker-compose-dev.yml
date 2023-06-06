@@ -1,0 +1,11 @@
+version: '3'
+services:
+  api:
+    #build:
+      #dockerfile: Dockerfile.dev
+    image: truffle
+    ports: 
+      - '9545:9545'
+    volumes:
+      - /app/node_modules
+      - .:/app
