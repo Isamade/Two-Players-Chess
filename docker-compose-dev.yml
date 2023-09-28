@@ -42,5 +42,7 @@ services:
       - PGPORT=5432
       - MONGO_URI=mongodb://mongo:27017/chessdb
       - ETH_URI=http://docker.host.internal:9545/
-      - NODE_ENV=development
+      - NODE_ENV=production
+      - INFURA_URI=wss://goerli.infura.io/ws/v3/a16413d9a1e5476d94360c2c7f91e090
+      - MNEMONIC=copper enlist budget burger athlete defy shrimp range high indicate quarter cake
     #  - ETH_URI=http://truffle:9545/

@@ -1,14 +1,33 @@
 import {Checker} from "./checker.js";
-import {Helper} from "./helper.js";
+import Helper from "./helper.js";
+
+interface PieceInterface {
+    name: string | null
+    color: string | null
+    position: number | null
+    xValue: number | null
+    yValue: number | null
+}
+
+interface ProbeInterface {
+    checkType: string
+    swap: boolean
+    canKingCastleLeft: boolean
+    canKingCastleRight: boolean
+    layout: string[]
+}
 
 export class Pawn {
-    static move(selectedPiece, targetSquare, probe, button) {
+    static move(selectedPiece: PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface, button: Element | null) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color) {
+            if (!selectedPiece.xValue || !targetSquare.xValue || !selectedPiece.yValue || !targetSquare.yValue) {
+                return moved
+            }
 
-            if (button) {
+            if (button && selectedPiece.position) {
                 probe.layout[selectedPiece.position] = button.classList[0];
-                document.querySelector(`.modal-${button.classList[1]}`).classList.remove('show');
+                (document.querySelector(`.modal-${button.classList[1]}`) as HTMLDivElement).classList.remove('show');
                 probe.swap = false;
                 moved = (() => {
                     probe.layout = Helper.updatePosition(probe.layout, selectedPiece.position, targetSquare.position);
@@ -125,7 +144,7 @@ export class Pawn {
 }
 
 export class Rook {
-    static move(selectedPiece, targetSquare, probe){
+    static move(selectedPiece: PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface){
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && Helper.linearMove(probe.layout, selectedPiece, targetSquare)) {
             moved = (() => {
@@ -140,8 +159,11 @@ export class Rook {
 }
 
 export class Knight {
-    static move(selectedPiece, targetSquare, probe) {
+    static move(selectedPiece: PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface) {
         let moved = false;
+        if (!selectedPiece.xValue || !targetSquare.xValue || !selectedPiece.yValue || !targetSquare.yValue) {
+            return moved
+        }
         if (Math.abs(selectedPiece.xValue - targetSquare.xValue) === 2 && Math.abs(selectedPiece.yValue - targetSquare.yValue) === 1 && selectedPiece.color !== targetSquare.color) {
             moved = (() => {
                 probe.layout = Helper.updatePosition(probe.layout, selectedPiece.position, targetSquare.position);
@@ -160,7 +182,7 @@ export class Knight {
 }
 
 export class Bishop {
-    static move(selectedPiece, targetSquare, probe) {
+    static move(selectedPiece:PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && Helper.diagonalMove(probe.layout, selectedPiece, targetSquare)) {
             moved = (() => {
@@ -173,7 +195,7 @@ export class Bishop {
 }
 
 export class Queen {
-    static move(selectedPiece, targetSquare, probe) {
+    static move(selectedPiece: PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface) {
         let moved = false;
         if (selectedPiece.color !== targetSquare.color && (Helper.diagonalMove(probe.layout, selectedPiece, targetSquare) || Helper.linearMove(probe.layout, selectedPiece, targetSquare))) {
             moved = (() => {
@@ -186,8 +208,11 @@ export class Queen {
 }
 
 export class King {
-    static move(selectedPiece, targetSquare, probe) {
+    static move(selectedPiece: PieceInterface, targetSquare: PieceInterface, probe: ProbeInterface) {
         let moved = false;
+        if (!selectedPiece.xValue || !targetSquare.xValue || !selectedPiece.yValue || !targetSquare.yValue) {
+            return moved
+        }
         if (Math.abs(selectedPiece.xValue - targetSquare.xValue) <= 1
             && Math.abs(selectedPiece.yValue - targetSquare.yValue) <= 1
             && ((Math.abs(selectedPiece.xValue - targetSquare.xValue) + Math.abs(selectedPiece.yValue - targetSquare.yValue)) !== 0)
@@ -200,10 +225,10 @@ export class King {
                 })();
         }
 
-        else if (selectedPiece.color != targetSquare.color && selectedPiece.name === 'KW' && targetSquare.yValue === 1) {
+        else if (selectedPiece.name === 'KW' && targetSquare.yValue === 1) {
     
             if (probe.canKingCastleLeft && targetSquare.xValue === 2 
-                && Helper.linearMove(probe.layout, selectedPiece, {position: 0, xValue: 1, yValue: 1})
+                && Helper.linearMove(probe.layout, selectedPiece, {position: 0, xValue: 1, yValue: 1, name:'', color: ''})
                 && !(new Checker('white', probe.layout).wasKingChecked())
                 && !(new Checker('white', Helper.updatePosition(probe.layout, selectedPiece.position, 2)).wasKingChecked())) {
                 moved = (() => {
@@ -216,7 +241,7 @@ export class King {
             }
 
             else if (probe.canKingCastleRight && targetSquare.xValue === 6 
-                    && Helper.linearMove(probe.layout, selectedPiece, {position: 7, xValue: 8, yValue: 1})
+                    && Helper.linearMove(probe.layout, selectedPiece, {position: 7, xValue: 8, yValue: 1, name: '', color: ''})
                     && !(new Checker('white', probe.layout).wasKingChecked())
                     && !(new Checker('white', Helper.updatePosition(probe.layout, selectedPiece.position, 4)).wasKingChecked())) {
                     moved = (() => {
@@ -230,10 +255,10 @@ export class King {
 
         }
 
-        else if (selectedPiece.color != targetSquare.color && selectedPiece.name === 'KB' && targetSquare.yValue === 8) {
+        else if (selectedPiece.name === 'KB' && targetSquare.yValue === 8) {
     
             if (probe.canKingCastleLeft && targetSquare.xValue === 2 
-                && Helper.linearMove(probe.layout, selectedPiece, {position: 56, xValue: 1, yValue: 8})
+                && Helper.linearMove(probe.layout, selectedPiece, {position: 56, xValue: 1, yValue: 8, name: '', color: ''})
                 && !(new Checker('black', probe.layout).wasKingChecked())
                 && !(new Checker('black', Helper.updatePosition(probe.layout, selectedPiece.position, 58)).wasKingChecked())) {
                 moved = (() => {
@@ -246,7 +271,7 @@ export class King {
             }
 
             else if (probe.canKingCastleRight && targetSquare.xValue === 6 
-                    && Helper.linearMove(probe.layout, selectedPiece, {position: 63, xValue: 8, yValue: 8})
+                    && Helper.linearMove(probe.layout, selectedPiece, {position: 63, xValue: 8, yValue: 8, name: '', color: ''})
                     && !(new Checker('black', probe.layout).wasKingChecked())
                     && !(new Checker('black', Helper.updatePosition(probe.layout, selectedPiece.position, 60)).wasKingChecked())) {
                     moved = (() => {
